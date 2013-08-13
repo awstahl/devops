@@ -11,17 +11,18 @@ fi
 PS1='[\e[37m\#\e[31m@\t \e[37m\u\e[31m@\h\e[37m]:\w\e[31m>\e[37m'
 cd
 echo
-#echo "Uptime:`uptime`"
+echo "Uptime:`uptime`"
 echo
+echo "Who's here:"
 who -u
 echo
-iostat
 df -h | grep -P "^(F|\/)"
 echo
 free -lt
 echo
-ifstat
+netstat -lptu
 echo
+service --status-all | grep -iP "is\srunning"
 export EDITOR=vi
 alias yi='yum install -y $1'
 alias yin='yum info $1'
