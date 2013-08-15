@@ -16,28 +16,39 @@ COMMIT
 # Ignore garbage packets
 -A INPUT -m state --state INVALID -j DROP 
 
+# Allow apparently valid traffic
+-A INPUT -p tcp -m state --state ESTABLISHED,RELATED -j ACCEPT
+
 # Prevent http scanning attacks by banning IPs w/ too many 404s
 -A INPUT -p tcp -m tcp --dport 80 -m state --state NEW -m recent --set --name DEFAULT --rsource 
 -A INPUT -p tcp -m tcp --dport 80 -m state --state NEW -m recent --update --seconds 3600 --hitcount 2 --rttl --name DEFAULT --rsource -m set --match-set httpscan-3 src -j LOG --log-prefix "HTTP 404 Ban: " 
 -A INPUT -p tcp -m tcp --dport 80 -m state --state NEW -m recent --update --seconds 3600 --hitcount 2 --rttl --name DEFAULT --rsource -m set --match-set httpscan-3 src -j TARPIT  --tarpit 
 
 # Now accept new http connections
--A INPUT -p tcp -m tcp --dport 80 -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT 
+-A INPUT -p tcp -m tcp --dport 80 -m state --state NEW -j ACCEPT 
 
 # Prevent ssh brute force pwd attacks; makes administration more difficult, but is safer
 -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --set --name DEFAULT --rsource 
 -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 3600 --hitcount 3 --rttl --name DEFAULT --rsource -j LOG --log-prefix "SSH IDS BAN: " 
 -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --rcheck --seconds 3600 --hitcount 3 --name DEFAULT --rsource -j TARPIT  --tarpit 
--A INPUT -p tcp -m tcp --dport 22 -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT
+
+# Now accept new ssh connections
+-A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
+
+# Allow apparently valid traffic out
+-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Tag HTTP 404 responses
 -A OUTPUT -p tcp -m tcp --sport 80 -m string --string "404" --algo bm --from 301 --to 303 -j httpscan 
 
-# Allow apparently valid traffic
--A OUTPUT -p tcp -m state --state RELATED,ESTABLISHED -j ACCEPT
+# Allow DNS Queries
+-A OUTPUT -p udp --dport 53 -j ACCEPT
 
 # Allow DHCPREQUESTs
 -A OUTPUT -p udp --dport 67 -j ACCEPT
+
+# Allow HTTP Requests
+-A OUTPUT -p tcp --dport 80 -j ACCEPT
 
 # Track # of HTTP 404s from a given IP
 -A httpscan -m set --match-set httpscan-2 dst -j SET --add-set httpscan-3 dst 
