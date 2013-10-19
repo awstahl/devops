@@ -1,0 +1,14 @@
+#!/bin/bash
+
+build() {
+    add_runscript
+}
+
+help() {
+    cat <<HELPEOF
+This hook does nothing in particular.  Its use is primarily for
+testing custom hooks. 
+HELPEOF
+}
+
+# vim: set ft=sh ts=4 sw=4 et:
