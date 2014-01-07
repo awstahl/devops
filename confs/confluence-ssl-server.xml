@@ -11,7 +11,7 @@
             <!-- Host name="localhost" debug="0" appBase="webapps" unpackWARs="true" autoDeploy="false"-->
             <Host name="0.0.0.0" debug="0" appBase="webapps" unpackWAR="true" autoDeploy="false">
 
-                <Context path="" docBase="../confluence" debug="0" reloadable="false" useHttpOnly="true">
+                <Context path="/confluence" docBase="../confluence" debug="0" reloadable="false" useHttpOnly="false">
                     <!-- Logger is deprecated in Tomcat 5.5. Logging configuration for Confluence is specified in confluence/WEB-INF/classes/log4j.properties -->
                     <Manager pathname="" />
                 </Context>
@@ -30,11 +30,28 @@
 
              For more info, see http://confluence.atlassian.com/display/DOC/Adding+SSL+for+Secure+Logins+and+Page+Security
         -->
+	<!--
+	     To run Confluence under its own
+	     DNS name as an apache vhost:
+	      * Create the <virtual host> block in an apache .conf
+	      * Include a proxy config pointing to the Confluence instance
+	      
         <Connector port="8090" maxHttpHeaderSize="8192"
                    maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
                    enableLookups="false" disableUploadTimeout="true"
                    acceptCount="100" URIEncoding="UTF-8"
                    proxyName="tc-confluence" proxyPort="443" scheme="https"/>
+        -->
+        <Connector port="8090" maxHttpHeaderSize="8192"
+                   maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+                   enableLookups="false" disableUploadTimeout="true"
+                   acceptCount="100" URIEncoding="UTF-8"
+                   proxyName="testcore.homelinux.net" proxyPort="443" scheme="https"/>
+	<Connector port="8090" maxHttpHeaderSize="8192"
+		   maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+		   enableLookups="false" disableUploadTimeouts="true"
+		   acceptCount="100" URIEncoding="UTF-8"
+		   proxyName="tc-devops" proxyPort="80" scheme="http"/>
     </Service>
 </Server>
 
