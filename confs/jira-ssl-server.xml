@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server port="8005" shutdown="SHUTDOWN">
+
+    <Listener SSLEngine="on" className="org.apache.catalina.core.AprLifecycleListener"/>
+    <Listener className="org.apache.catalina.core.JasperListener"/>
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"/>
+    <Service name="Catalina">
+        <Engine defaultHost="testcore.homelinux.net" name="Catalina">
+            <Host appBase="webapps" autoDeploy="true" name="testcore.homelinux.net" unpackWARs="true">
+                <Context docBase="${catalina.home}/atlassian-jira" path="/jira" reloadable="false" useHttpOnly="false">
+                    <Resource auth="Container" factory="org.objectweb.jotm.UserTransactionFactory" jotm.timeout="60" name="UserTransaction" type="javax.transaction.UserTransaction"/>
+                    <Manager pathname=""/>
+                </Context>
+
+            </Host>
+            <Valve className="org.apache.catalina.valves.AccessLogValve" pattern="%a %{jira.request.id}r %{jira.request.username}r %t &quot;%m %U%q %H&quot; %s %b %D &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; &quot;%{jira.request.assession.id}r&quot;" resolveHosts="false"/>
+
+        </Engine>
+    <Connector acceptCount="100" connectionTimeout="20000" disableUploadTimeout="true" 
+    	enableLookups="false" maxHttpHeaderSize="8192" maxThreads="150" minSpareThreads="25" 
+    	port="1144" protocol="HTTP/1.1" redirectPort="8443" useBodyEncodingForURI="true" 
+    	scheme="https" proxyName="testcore.homelinux.net" proxyPort="443"/>
+    <Connector SSLEnabled="false" acceptCount="100" 
+    	clientAuth="false" connectionTimeout="20000" 
+    	disableUploadTimeout="true" enableLookups="false" 
+    	maxHttpHeaderSize="8192" maxSpareThreads="75" 
+    	maxThreads="150" minSpareThreads="25" 
+    	port="1145" protocol="org.apache.coyote.http11.Http11Protocol" 
+    	scheme="http" secure="false" 
+    	useBodyEncodingForURI="true"/>
+    </Service>
+</Server>
