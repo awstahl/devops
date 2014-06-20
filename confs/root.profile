@@ -24,7 +24,7 @@ netstat -lptu
 echo
 service --status-all | grep -iP "is\srunning"
 export EDITOR=vi
-alias install='yum install -y $1'
+alias inst='yum install -y $1'
 alias details='yum info $1'
 alias list='yum list $1'
 alias remove='yum remove $1'
