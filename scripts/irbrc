@@ -1,0 +1,15 @@
+class Object
+
+  def class?(klass)
+    self.class == klass
+  end
+
+  def behavior
+    (self.methods - Object.methods).sort
+  end
+
+end
+
+if File.exist?  "#{ Dir.pwd }/.irbrc" 
+  load "#{ Dir.pwd }/.irbrc" unless Dir.pwd == ENV['HOME']
+end
