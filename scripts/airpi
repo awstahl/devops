@@ -40,7 +40,7 @@ start() {
   monitoring
   [ $? == "0" ] && log_failure_msg "airpi: requires exclusive control of monitor mode" && exit 1
 
-  /usr/sbin/airmon-ng start $DEVICE 
+  $AIRMON start $DEVICE 
   [ $? != "0" ] && log_failure_msg "airpi: failed to start monitor mode on $DEVICE" && exit 2
 
   start-stop-daemon --pidfile $PIDFILE -m \
