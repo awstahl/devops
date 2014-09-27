@@ -13,11 +13,38 @@
 
 # /etc/init.d/airpi: start and stop the airpi daemon
 
-#. /lib/lsb/init-functions
+# Source config if available.  Safe defaults otherwise.
+[ -e '/etc/airpi.conf' ] && . /etc/airpi.conf
+
+# Process' files
+PREFIX=`date +%y%m%d%H%M`
+PIDFILE='/var/run/airpi.pid'
+DATA=${DATA:-'/var/opt/airpi/'}
+
+[ -d $DATA ] || mkdir -p $DATA
+
+# Airpi expects exclusive control of monitor devices
+monitoring() {
+  /usr/sbin/airmon-ng | grep -iP "^mon[0-9]+"
+  ([ $? == "0" ] && return 0) || return 1
+}
 
 start() {
-  airmon-ng start wlan0
-  airodump-ng -e -w `date +%y%m%d%H%M` --showack --berlin 60 -M -U --output-format csv mon0
+  monitoring
+  [ $? == "0" ] && echo "airpi: requires exclusive control of monitor mode" && exit 1
+
+  /usr/sbin/airmon-ng start $DEVICE 
+  [ $? != "0" ] && echo "airpi: failed to start monitor mode on $DEVICE" && exit 2
+
+  start-stop-daemon --pidfile $PIDFILE -m \
+  -b -d $DATA \
+  --start -x /usr/sbin/airodump-ng \
+    -- -w $PREFIX \
+    --berlin ${BERLIN:-60} \
+    ${MANF:+-M} \
+    ${UPTIME:+-U} \
+    --output-format ${FORMAT:-csv} \
+    mon0
 }
 
 stop() {
