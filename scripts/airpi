@@ -36,6 +36,7 @@ monitoring() {
 }
 
 start() {
+  log_daemon_msg "Starting airpi daemon" "airpi"
   monitoring
   [ $? == "0" ] && log_failure_msg "airpi: requires exclusive control of monitor mode" && exit 1
 
@@ -52,7 +53,8 @@ start() {
     --output-format ${FORMAT:-csv} \
     mon0
 
-  exit
+  log_success_msg "airpi: started successfully"
+  exit 0
 }
 
 stop() {
@@ -68,6 +70,8 @@ stop() {
   do
     $AIRMON stop $MON
   done
+
+  log_success_msg "airpi: stopped"
   exit 0
 }
 
@@ -83,7 +87,7 @@ case "$1" in
     start
     ;;
   status)
-    ( pgrep airodump-ng && ps aux | grep -iP airodump-ng ) || echo "[Airpi]: Not running..."
+    status_of_proc -p $PIDFILE "$AIRDMP" airpi
     exit $?
     ;;
   *)
