@@ -11,6 +11,8 @@
 #                    Allows wifi dumping to start at boot.
 ### END INIT INFO
 
+. /lib/lsb/init-functions
+
 # /etc/init.d/airpi: start and stop the airpi daemon
 
 # Source config if available.  Safe defaults otherwise.
@@ -23,33 +25,50 @@ DATA=${DATA:-'/var/opt/airpi/'}
 
 [ -d $DATA ] || mkdir -p $DATA
 
-# Airpi expects exclusive control of monitor devices
+# Process' binaries
+AIRMON=`which airmon-ng`
+AIRDMP=`which airodump-ng`
+
+# Airdump expects exclusive control of monitor devices
 monitoring() {
-  /usr/sbin/airmon-ng | grep -iP "^mon[0-9]+"
+  $AIRMON | grep -iP "^mon[0-9]+"
   ([ $? == "0" ] && return 0) || return 1
 }
 
 start() {
   monitoring
-  [ $? == "0" ] && echo "airpi: requires exclusive control of monitor mode" && exit 1
+  [ $? == "0" ] && log_failure_msg "airpi: requires exclusive control of monitor mode" && exit 1
 
   /usr/sbin/airmon-ng start $DEVICE 
-  [ $? != "0" ] && echo "airpi: failed to start monitor mode on $DEVICE" && exit 2
+  [ $? != "0" ] && log_failure_msg "airpi: failed to start monitor mode on $DEVICE" && exit 2
 
   start-stop-daemon --pidfile $PIDFILE -m \
   -b -d $DATA \
-  --start -x /usr/sbin/airodump-ng \
+  --start -x $AIRDMP \
     -- -w $PREFIX \
     --berlin ${BERLIN:-60} \
     ${MANF:+-M} \
     ${UPTIME:+-U} \
     --output-format ${FORMAT:-csv} \
     mon0
+
+  exit
 }
 
 stop() {
-  pkill -9 airodump-ng
-  airmon-ng stop mon0
+  log_daemon_msg "Stopping airpi daemon" "airpi"
+
+  start-stop-daemon --pidfile $PIDFILE \
+  --stop -x $AIRDMP \
+  --signal 9
+
+  rm -f $PIDFILE
+
+  for MON in `$AIRMON | awk '$1 ~ /^mon[0-9]+/ {print $1}'`
+  do
+    $AIRMON stop $MON
+  done
+  exit 0
 }
 
 case "$1" in
