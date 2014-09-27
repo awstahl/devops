@@ -1,0 +1,48 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          airpi
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Service to auto-launch airodump-ng.
+# Description:       Service to auto-launch airodump-ng. 
+#                    Allows wifi dumping to start at boot.
+### END INIT INFO
+
+# /etc/init.d/airpi: start and stop the airpi daemon
+
+#. /lib/lsb/init-functions
+
+start() {
+  airmon-ng start wlan0
+  airodump-ng -e -w `date +%y%m%d%H%M` --showack --berlin 60 -M -U --output-format csv mon0
+}
+
+stop() {
+  pkill -9 airodump-ng
+  airmon-ng stop mon0
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart|force-reload)
+    stop
+    start
+    ;;
+  status)
+    ( pgrep airodump-ng && ps aux | grep -iP airodump-ng ) || echo "[Airpi]: Not running..."
+    exit $?
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+exit 0
+
