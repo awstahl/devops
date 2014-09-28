@@ -60,12 +60,7 @@ stop() {
   --signal 9
 
   rm -f $PIDFILE
-
-  # TODO: This isn't terribly robust...
-  for MON in `$AIRMON | awk '$1 ~ /^mon[0-9]+/ {print $1}'`
-  do
-    $AIRMON stop $MON
-  done
+  $AIRMON stop mon0
 
   log_success_msg "airpi: stopped"
   exit 0
