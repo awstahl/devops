@@ -29,15 +29,10 @@ DATA=${DATA:-'/var/opt/airpi/'}
 AIRMON=`which airmon-ng`
 AIRDMP=`which airodump-ng`
 
-# Airdump expects exclusive control of monitor devices
-monitoring() {
-  $AIRMON | grep -iP "^mon[0-9]+"
-  ([ $? == "0" ] && return 0) || return 1
-}
 
 start() {
   log_daemon_msg "Starting airpi daemon" "airpi"
-  monitoring
+  $AIRMON | grep -iP "^mon[0-9]+"
   [ $? == "0" ] && log_failure_msg "airpi: requires exclusive control of monitor mode" && exit 1
 
   $AIRMON start $DEVICE 
@@ -66,6 +61,7 @@ stop() {
 
   rm -f $PIDFILE
 
+  # TODO: This isn't terribly robust...
   for MON in `$AIRMON | awk '$1 ~ /^mon[0-9]+/ {print $1}'`
   do
     $AIRMON stop $MON
