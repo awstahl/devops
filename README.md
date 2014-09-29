@@ -1,4 +1,4 @@
 devops
 ======
 
-Collection of dev ops tools I've built for personal use.
+Collection of dev ops tools and configs I've built for personal use.
