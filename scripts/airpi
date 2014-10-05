@@ -15,13 +15,13 @@
 
 # /etc/init.d/airpi: start and stop the airpi daemon
 
-# Source config if available.  Safe defaults otherwise.
+# Source config if available.  Sane defaults otherwise.
 [ -e '/etc/airpi.conf' ] && . /etc/airpi.conf
 
 # Process' files
 PREFIX=`date +%y%m%d%H%M`
 PIDFILE='/var/run/airpi.pid'
-DATA=${DATA:-'/var/opt/airpi/'}
+DATA=${DATA:-'/opt/airpi/'}
 
 [ -d $DATA ] || mkdir -p $DATA
 
@@ -59,8 +59,8 @@ stop() {
   --stop -x $AIRDMP \
   --signal 9
 
-  rm -f $PIDFILE
   $AIRMON stop mon0
+  rm -f $PIDFILE
 
   log_success_msg "airpi: stopped"
   exit 0
@@ -82,7 +82,7 @@ case "$1" in
     exit $?
     ;;
   *)
-    echo $"Usage: $0 {start|stop|restart}"
+    echo $"Usage: $0 {start|stop|restart|status}"
     exit 1
 esac
 exit 0
