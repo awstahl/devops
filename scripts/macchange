@@ -30,10 +30,17 @@ MCHG=${MCHGBIN:-which macchanger}
 start() {
   log_daemon_msg "Starting macchange daemon" "macchange"
 
+  if [ -z $MCHG ]; then
+    log_failure_msg "macchange: unable to locate macchanger binary. Set MCHGBIN in /etc/macchange.conf"
+    exit 1
+  fi
+
+
 
   start-stop-daemon --pidfile $PIDFILE -m \
   -b -d $DATA \
-  --start -x $MCHG \
+  --start -x $MCHG -r \
+  
 
   log_success_msg "macchange: started successfully"
   exit 0
