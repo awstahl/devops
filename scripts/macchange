@@ -1,0 +1,76 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          macchange
+# Required-Start:    $remote_fs
+# Required-Stop:     $remote_fs
+# X-Start-Before:    $network
+# X-Stop-After:      $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Service to auto-launch nmap.
+# Description:       Service to auto-launch nmap. 
+#                    Starts default network and port scans every five minutes.
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+# /etc/init.d/macchange: start and stop the macchange daemon
+
+# Source config if available.  Sane defaults otherwise.
+[ -e '/etc/macchange.conf' ] && . /etc/macchange.conf
+
+# Process' files
+PIDFILE='/var/run/macchange.pid'
+
+# Process' binaries
+MCHG=${MCHGBIN:-which macchanger}
+
+
+start() {
+  log_daemon_msg "Starting macchange daemon" "macchange"
+
+
+  start-stop-daemon --pidfile $PIDFILE -m \
+  -b -d $DATA \
+  --start -x $MCHG \
+
+  log_success_msg "macchange: started successfully"
+  exit 0
+}
+
+stop() {
+  log_daemon_msg "Stopping macchange daemon" "macchange"
+
+  start-stop-daemon --pidfile $PIDFILE \
+  --stop -x $MCHG \
+  --signal 9
+
+
+  rm -f $PIDFILE
+
+  log_success_msg "macchange: stopped"
+  exit 0
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart|force-reload)
+    stop
+    start
+    ;;
+  status)
+    status_of_proc -p $PIDFILE "$MCHG" macchange
+    exit $?
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart|status}"
+    exit 1
+esac
+exit 0
+
