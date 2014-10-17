@@ -12,7 +12,7 @@ $tmpkey
 EOF
 
     if [ ! -d /new_root/$keydst ]; then
-      mkdir /new_root/$keydst
+      mkdir -p /new_root/$keydst
     fi
 
     [ -d /new_root/$keydst ] && mount -t tmpfs -l keys /new_root/$keydst
