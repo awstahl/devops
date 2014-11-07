@@ -1,0 +1,15 @@
+#!/bin/bash
+
+build() {
+    add_runscript
+}
+
+help() {
+    cat <<HELPEOF
+This hook enables an encrypted swap partition to
+offer hibernation support and data integrity by
+re-keying at boot. 
+HELPEOF
+}
+
+# vim: set ft=sh ts=4 sw=4 et:

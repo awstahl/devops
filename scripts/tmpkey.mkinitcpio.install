@@ -6,8 +6,9 @@ build() {
 
 help() {
     cat <<HELPEOF
-This hook does nothing in particular.  Its use is primarily for
-testing custom hooks. 
+This hook enables the storage of a LUKS key within
+the boot image by extracting the key at boot time
+to a tmpfs. 
 HELPEOF
 }
 

@@ -1,0 +1,24 @@
+#!/usr/bin/ash
+
+# Usage:
+# => Kernel parameters: tmpkey=<src>:<dst>
+# => mkinitcpio.conf: HOOKS="... tmpkey ..."
+
+run_latehook() {
+
+#  if [ -n "$tmpkey" ]; then
+#    IFS=: read keysrc keydst <<EOF
+#$tmpkey
+#EOF
+
+#    if [ ! -d /new_root/$keydst ]; then
+#      mkdir -p /new_root/$keydst
+#    fi
+
+#    [ -d /new_root/$keydst ] && mount -t tmpfs -l keys /new_root/$keydst
+
+#    if [ -f $keysrc ]; then
+#      cp $keysrc /new_root/$keydst
+#    fi
+#  fi
+}
