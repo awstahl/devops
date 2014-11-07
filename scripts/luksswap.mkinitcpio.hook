@@ -37,4 +37,5 @@ EOF
 
   mv /$key /new_root/crypt/$key
   cryptsetup --key-file /new_root/crypt/$key luksResume swap
+  mkswap -L swap /dev/mapper/swap > /new_root/root/swap.log
 }
