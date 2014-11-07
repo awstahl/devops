@@ -2,6 +2,8 @@
 
 # Usage:
 # => Kernel parameters: tmpkey=<src>:<dst>
+# => <src> - /path/to/key as included in init image
+# => <dst> - /path/to/tmpfs where key will be stored
 # => mkinitcpio.conf: HOOKS="... tmpkey ..."
 
 run_latehook() {
