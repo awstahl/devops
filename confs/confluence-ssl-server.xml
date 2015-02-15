@@ -7,7 +7,7 @@
                    useURIValidationHack="false" URIEncoding="UTF-8"/>
         <Engine name="Standalone" defaultHost="0.0.0.0" debug="0">
             <Host name="0.0.0.0" debug="0" appBase="webapps" unpackWAR="true" autoDeploy="false">
-                <Context path="/confluence" docBase="../confluence" debug="0" reloadable="false" useHttpOnly="false">
+                <Context path="/wiki" docBase="../confluence" debug="0" reloadable="false" useHttpOnly="false">
                     <Manager pathname="" />
                 </Context>
             </Host>
@@ -18,11 +18,11 @@
                    enableLookups="false" disableUploadTimeout="true"
                    acceptCount="100" URIEncoding="UTF-8"
                    proxyName="testcore.homelinux.net" proxyPort="443" scheme="https"/>
-	<Connector port="8090" maxHttpHeaderSize="8192"
+	<!--Connector port="8090" maxHttpHeaderSize="8192"
 		   maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
 		   enableLookups="false" disableUploadTimeouts="true"
 		   acceptCount="100" URIEncoding="UTF-8"
-		   proxyName="tc-devops" proxyPort="80" scheme="http"/>
+		   proxyName="tc-devops" proxyPort="80" scheme="http"/-->
     </Service>
 </Server>
 
