@@ -1,0 +1,25 @@
+# This is a simple set of example functions 
+# intended to aid in the administration of
+# similarly-named machines, which have been
+# pre-configured with authorized keys.
+
+# Faster than writing ssh bash completes,
+# but not intended for config management.
+
+# ssh config has 10.1.2.0/24 identity
+10 () {
+  ssh 10.1.2.$1
+}
+
+# Wildcard hostnames
+phx () {
+  ssh $1.phx.example.com
+}
+
+# By numerical app hostname
+httpd () {
+  pfx=httpd
+  sfx=example.com
+  ssh ${pfx}$1${sfx}
+}
+
