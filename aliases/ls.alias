@@ -1,7 +1,0 @@
-alias l='/bin/ls'
-alias la='ls -aFl --color=auto'
-alias lh='ls -hl'
-alias listen='netstat -lnpt'
-alias ll='ls -Fl --color=auto'
-alias lr='ls -Flrt --color=auto'
-alias ls='ls --color=auto'

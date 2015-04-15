@@ -1,4 +1,0 @@
-alias tcf='tar -czvvf'
-alias tf='tar -tf'
-alias tx='tar -xvvf'
-alias txz='tar -xzvvf'

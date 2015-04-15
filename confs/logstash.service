@@ -1,0 +1,17 @@
+[Unit]
+Description=Logstash Service
+
+[Service]
+EnvironmentFile=-/etc/logstash/logstash.conf
+Group=logstash
+ExecStart=/opt/logstash/bin/logstash -f $CONFDIR
+ExecStop=/bin/pkill -2 -u logstash 
+StandardInput=tty
+StandardOutput=syslog
+TTYPath=/dev/tty60
+Type=simple
+User=logstash
+WorkingDirectory=/opt/logstash
+
+[Install]
+WantedBy=multi-user.target

@@ -1,4 +1,0 @@
-alias htck='curl -X HEAD -v'
-alias p4='ping -c 4'
-alias pg='ping -c 4 google.com'
-

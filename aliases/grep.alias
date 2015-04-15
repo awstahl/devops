@@ -1,8 +1,0 @@
-alias @='grep -iP'
-alias @c='grep -ciP'
-alias @cr='grep -ciPr'
-alias @lr='grep -ilPr'
-alias @n='grep -inP'
-alias @nr='grep -inPr'
-alias @o='grep -iPo'
-alias @r='grep -iPr'

@@ -1,5 +1,0 @@
-alias files="pacman -Ql"
-alias pinst="pacman -S"
-alias search="pacman -Ss"
-alias update="pacman -Syu"
-alias whose="pacman -Qo"
