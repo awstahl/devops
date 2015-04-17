@@ -1,5 +1,6 @@
 [Unit]
 Description=Logstash Service
+After=esearchd.service
 
 [Service]
 EnvironmentFile=-/etc/logstash/logstash.conf
