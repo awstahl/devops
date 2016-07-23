@@ -1,0 +1,15 @@
+[Unit]
+Description=ElasticSearch Deamon
+
+[Service]
+Type=forking
+PIDFile=/var/run/esearchd/esearchd.pid
+ExecStart=/opt/elasticsearch/bin/elasticsearch -d -p /var/run/esearchd/esearchd.pid
+ExecStop=/bin/pkill -9 -u esearchd
+StandardOutput=syslog
+User=esearchd
+Group=esearchd
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,6 +1,0 @@
-alias reload='systemctl reload'
-alias restart='systemctl restart'
-alias start='systemctl start'
-alias sctl='systemctl'
-alias status='systemctl -l status'
-alias stop='systemctl stop'
