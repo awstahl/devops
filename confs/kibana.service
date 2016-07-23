@@ -1,0 +1,14 @@
+[Unit]
+Description=Kibana Deamon
+
+[Service]
+Type=simple
+ExecStart=/opt/kibana/bin/kibana
+ExecStop=/bin/pkill -9 -u kibana
+StandardOutput=syslog
+User=kibana
+Group=kibana
+
+[Install]
+WantedBy=multi-user.target
+

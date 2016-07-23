@@ -1,0 +1,4 @@
+ 
+
+
+ExecStart=/usr/share/dump1090-mutability/dump1090 --net --net-http-port 6400 --lat "37.789922" --lon "-122.416249" --modeac --max-range 500 --enable-agc > flight.log &
