@@ -18,15 +18,15 @@
         </Engine>
     <Connector acceptCount="100" connectionTimeout="20000" disableUploadTimeout="true" 
     	enableLookups="false" maxHttpHeaderSize="8192" maxThreads="150" minSpareThreads="25" 
-    	port="1144" protocol="HTTP/1.1" redirectPort="8443" useBodyEncodingForURI="true" 
+    	port="8085" protocol="HTTP/1.1" redirectPort="8443" useBodyEncodingForURI="true" 
     	scheme="https" proxyName="testcore.homelinux.net" proxyPort="443"/>
-    <Connector SSLEnabled="false" acceptCount="100" 
+    <!--Connector SSLEnabled="false" acceptCount="100" 
     	clientAuth="false" connectionTimeout="20000" 
     	disableUploadTimeout="true" enableLookups="false" 
     	maxHttpHeaderSize="8192" maxSpareThreads="75" 
     	maxThreads="150" minSpareThreads="25" 
     	port="1145" protocol="org.apache.coyote.http11.Http11Protocol" 
     	scheme="http" secure="false" 
-    	useBodyEncodingForURI="true"/>
+    	useBodyEncodingForURI="true"/-->
     </Service>
 </Server>
