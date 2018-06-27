@@ -13,7 +13,7 @@ class Listener
   attr_reader :app, :host, :hosts, :path, :port, :protocol
 
   def initialize(path, port, proto)
-    @host = ENV['HOSTNAME']
+    @host = `hostname`.strip
     @hosts = {}
     @path = (File.exist? path) ? path : (raise Errno::ENOENT)
     @app = File.basename @path
@@ -26,7 +26,7 @@ class Listener
         @logging = true unless @hosts[ dir ].empty?
       end
     end
-    @port = port.to_i
+    @port = port
     @protocol = proto
   end
 
@@ -57,17 +57,16 @@ class Listener
   end
 
   def pcap
-    "#@protocol port #@port"
+    "#@protocol:#@port"
   end
 
   def to_s
     "#@host:#@path:#@port:#@protocol"
   end
-
 end
 
 
-# Scan directory for confs & return as array of Listeners
+# Scan directory for confs & return as array of Syslog
 # No, it's not actually a factory...
 class ListenerFactory
 
@@ -133,39 +132,56 @@ class Parser
 end
 
 
-class Listeners
+class Syslog
 
   attr_reader :listeners
-
-  @@filters = {}
-
 
   def initialize(path)
     @listeners = ListenerFactory.produce path
   end
-
-  def filter
-    puts "all your base are belong to us"
-  end
-
 end
 
-opts = OptionParser.new do |opts|
 
-  opts.banner = 'Usage: rsyslog-forensics [options]'
-  opts.separator ''
-  opts.separator "Options:"
+class RForensic
 
-  opts.on('-d', '--dir [DIRECTORY]', 'Path to syslog configuration directoyr') do |dir|
-    listeners = Listeners.new dir
+  def self.run(args)
+    syslog = nil
+
+    OptionParser.new do |opts|
+      opts.banner = 'Usage: rsyslog-forensics [options]'
+      opts.separator ''
+      opts.separator "Options:"
+
+      opts.on '-d', '--dir [DIRECTORY]', 'Path to syslog configuration directoyr'  do |dir|
+        syslog = Syslog.new dir
+      end
+
+      #'OBS: next few opts are soaking wet... fix later, in a hurry now.
+
+      opts.on '-a', '--all', 'Print all syslog conf data'  do
+        syslog.listeners.each {|listener| puts listener.to_s }
+      end
+
+      opts.on '-m', '--migrate', 'Print all syslog confs in use' do
+        syslog.listeners.each {|listener| puts listener.to_s if listener.migrate? }
+      end
+
+      opts.on '-M', '--nomigrate', 'Print all syslog confs not in use' do
+        syslog.listeners.each {|listener| puts listener.to_s if not listener.migrate? }
+      end
+
+      opts.on '-p', '--pcap [APP]', 'Output a pcap filter string' do |app|
+        apps = syslog.listeners.select {|listener| listener.app == app }
+        apps.each {|listener| puts listener.pcap } if not apps.empty?
+      end
+
+      opts.on '-q', '--query [APP]', 'Generate a query string for use in splunk search' do |app|
+        apps = syslog.listeners.select {|listener| listener.app =~ /#{ app }/ }
+        puts apps.map {|listener| listener.query }.uniq.join " OR " if not apps.empty?
+      end
+ 
+    end.parse! args
   end
-
-  opts.on('-p', '--pcap [PORT]', 'Output a pcap filter string') do |port|
-    # puts "werd. pcaps. awesome."
-    # LOLWAT when did we get to javaland?
-    listeners.listeners.any? {|listener| listener.port == port }.each {|listener| listener.pcap }
-  end 
 end
 
-listeners = ''
-opts.parse! ARGV
+RForensic.run ARGV
