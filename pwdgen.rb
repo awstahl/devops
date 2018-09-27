@@ -65,7 +65,9 @@ class Password
 
   @words = []
   @subs = {
-    special: 
+    special: { 'a' => '@', 'e' => '3', 'i' => '!', 'u' => '^' },
+    nums: { 'e' => '3', 'l' => '1', 'o' => '0', 's' => '5', 't' => '7' },
+    uppers: {}
 }
 
 
